@@ -9,6 +9,6 @@ npm ci --ignore-scripts
 npm test
 ```
 
-The public [tracker issue](https://github.com/chaseakub/when-shipped-demo/issues/1) replays the two published versions in order. At registration the Action checks 18.2.0. A maintainer then dispatches the same workflow with 18.2.1. Both runs use the public npm registry and GitHub commit history. A separate [package test](https://github.com/chaseakub/when-shipped-demo/actions/workflows/proof.yml) checks the actual rendered HTML.
+The public [tracker issue](https://github.com/chaseakub/when-shipped-demo/issues/1) replays the two published versions in order. At registration the Action checks 18.2.0. The [18.2.0 run](https://github.com/chaseakub/when-shipped-demo/actions/runs/44842046437) left the issue waiting. The [18.2.1 run](https://github.com/chaseakub/when-shipped-demo/actions/runs/44842099763) posted the [bot’s version and install command](https://github.com/chaseakub/when-shipped-demo/issues/1#issuecomment-7053855864). Both runs use the public npm registry and GitHub commit history. A separate [package test](https://github.com/chaseakub/when-shipped-demo/actions/workflows/proof.yml) checks the actual rendered HTML.
 
 The [demo workflow](.github/workflows/when-shipped.yml) pins the older version for the first check so the replay is repeatable. The [normal installer](https://github.com/chaseakub/tell-me-when-this-ships/blob/main/examples/when-shipped.yml) follows npm's latest stable release on a schedule.
