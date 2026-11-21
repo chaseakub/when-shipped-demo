@@ -1,0 +1,32 @@
+name: Tell me when this ships
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Published version of Marked to check (blank uses npm latest)
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: tell-me-when-this-ships
+  queue: max
+
+jobs:
+  follow-up:
+    if: github.event_name != 'issue_comment' || (!github.event.issue.pull_request && startsWith(github.event.comment.body, '/when-shipped'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: chaseakub/tell-me-when-this-ships@v1
+        with:
+          source-repository: markedjs/marked
+          package: marked
+          # Replay the previous real npm release when the issue is registered.
+          # A manual run supplies the fixed version to check the same issue again.
+          version: ${{ github.event_name == 'issue_comment' && '18.2.0' || inputs.version }}

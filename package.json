@@ -1,0 +1,10 @@
+{
+  "name": "when-shipped-demo",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test proof.test.mjs" },
+  "devDependencies": {
+    "marked-before": "npm:marked@18.2.0",
+    "marked-after": "npm:marked@18.2.1"
+  }
+}
