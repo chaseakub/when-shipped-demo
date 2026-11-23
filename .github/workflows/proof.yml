@@ -14,3 +14,36 @@ jobs:
           node-version: 24
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm test
+  typesense:
+    name: Typesense issue 273, stable release reply
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          repository: chaseakub/tell-me-when-this-ships
+          ref: d2e21c913a9272be9ad6c0e98da785d2f1a7dac9 # v1.0.0
+          path: action-under-test
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+      - name: Replay the watch against published npm versions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node typesense-replay.mjs
+      - name: Install four published adapter versions
+        working-directory: ${{ runner.temp }}
+        run: |
+          mkdir adapter-probe
+          cd adapter-probe
+          npm install --ignore-scripts --no-audit --no-fund --no-package-lock \
+            stable-before@npm:typesense-instantsearch-adapter@3.0.2 \
+            prerelease-one@npm:typesense-instantsearch-adapter@3.0.3-1 \
+            prerelease-two@npm:typesense-instantsearch-adapter@3.0.3-2 \
+            stable-after@npm:typesense-instantsearch-adapter@3.0.3
+      - name: Test the Node.js import from the issue
+        working-directory: ${{ runner.temp }}/adapter-probe
+        run: node --input-type=module < "$GITHUB_WORKSPACE/typesense-import.mjs"
